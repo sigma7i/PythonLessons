@@ -67,6 +67,7 @@ current_day = int(dates[0])
 current_mounth = int(dates[1])
 
 print(f'{days[current_day - 1]} {months[current_mounth - 1]} {dates[2]} года')
+#более правильнее было решить через словари
 
 # задача 3
 
