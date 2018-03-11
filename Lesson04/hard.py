@@ -31,7 +31,7 @@ def check_account(person):
 
 
 def withdraw_money(person, money):
-    if person['money'] - money == 0:
+    if person['money'] - money < 0:
         person['money'] -= money
         return 'Вы сняли {} рублей.'.format(money)
     else:
@@ -45,25 +45,50 @@ def process_user_choice(choice, person):
         count = float(input('Сумма к снятию:'))
         print(withdraw_money(person, count))
 
+def card_pin_validation(card_number, pin):
+    if not str(card_number).isdigit():
+        print('в номере карты должны быть только цифры')
+        return False
+    if len(card_number) != 16:
+        print(print('Вы ввели неверный номер, должно быть 16 цифр'))
+        return False
+    if not str(pin).isdigit():
+        print('в пине должны быть только цифры')
+        return False
+    if len(pin) != 4:
+        print(print('Вы ввели неверный пин, должно быть 4 цифры'))
+        return False
+    return True
+
 
 def start():
-    card_number, pin_code = input('Введите номер карты и пин код через пробел:').split()
+    try:
+        card_number, pin_code = input('Введите номер карты и пин код через пробел:').split() # без пробела
+    except ValueError:
+        print('необходимо ввести номер карты и пин код через пробел')
+        raise ValueError('необходимо ввести номер карты и пин код через пробел')
 
-    card_number = int(card_number)
-    pin_code = int(pin_code)
-    person = get_person_by_card(card_number)
-    if person and is_pin_valid(person, pin_code):
-        while True:
-            choice = int(input('Выберите пункт:\n'
-                               '1. Проверить баланс\n'
-                               '2. Снять деньги\n'
-                               '3. Выход\n'
-                               '---------------------\n'
-                               'Ваш выбор:'))
-            if choice == 3:
-                break
-            process_user_choice(choice, person)
-    else:
-        print('Номер карты или пин код введены не верно!')
+    if card_pin_validation(card_number, pin_code):
+        card_number = int(card_number)
+        pin_code = int(pin_code)
+        person = get_person_by_card(card_number)
+        if person and is_pin_valid(person, pin_code):
+            while True:
+                choice = int(input('Выберите пункт:\n'
+                                   '1. Проверить баланс\n'
+                                   '2. Снять деньги\n'
+                                   '3. Выход\n'
+                                   '---------------------\n'
+                                   'Ваш выбор:'))
+                if choice == 3:
+                    break
+                process_user_choice(choice, person)
+        else:
+            print('Номер карты или пин код введены не верно!')
 
-start()
+try:
+    start()
+except:
+    print('работа завершилась из за ошибки')
+finally:
+    start() #готов к новым запросам, как альтернатива бесконечного while
