@@ -31,7 +31,7 @@ def check_account(person):
 
 
 def withdraw_money(person, money):
-    if person['money'] - money < 0:
+    if (person['money'] - money) >= 0:
         person['money'] -= money
         return 'Вы сняли {} рублей.'.format(money)
     else:
@@ -39,11 +39,18 @@ def withdraw_money(person, money):
 
 
 def process_user_choice(choice, person):
-    if choice == '1':
+    if choice == 1:
         print(check_account(person))
-    elif choice == '2':
-        count = float(input('Сумма к снятию:'))
-        print(withdraw_money(person, count))
+    elif choice == 2:
+        while True:
+            try:
+                input_money = float(input('Сумма к снятию:'))
+            except ValueError:
+                print('Нужно вводить цифры')
+                continue
+
+            print(withdraw_money(person, input_money))
+            break
 
 def card_pin_validation(card_number, pin):
     if not str(card_number).isdigit():
