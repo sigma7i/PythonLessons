@@ -3,6 +3,7 @@
 # из которой запущен данный скрипт.
 # И второй скрипт, удаляющий эти папки.
 import os
+import sys
 
 
 def create_dirs():
@@ -47,9 +48,9 @@ if __name__ == '__main__':
 
 # Задача-2:
 # Напишите скрипт, отображающий папки текущей директории.
-def show_dirs():
+def show_dirs(directory):
     """Отображает папки текущей директории."""
-    for dir in os.listdir(os.getcwd()):
+    for dir in os.listdir(directory if directory else os.getcwd()):
         if os.path.isdir(dir):
             print(dir)
 
@@ -61,10 +62,10 @@ if __name__ == '__main__':
 # Задача-3:
 # Напишите скрипт, создающий копию файла, из которого запущен данный скрипт.
 
-def copy_current_file():
+def copy_file(file_to_copy = sys.argv[0]):
     """Создает копию файла, из которого запущен"""
-    with open(__file__, encoding='UTF-8') as f:
-        with open('copy_' + os.path.basename(__file__), 'w', encoding='UTF-8') as w:
+    with open(file_to_copy, encoding='UTF-8') as f:
+        with open('copy_' + os.path.basename(file_to_copy), 'w', encoding='UTF-8') as w:
             w.writelines(f.readlines())
 
 
@@ -75,7 +76,7 @@ def delete_copyes():
 
 
 if __name__ == '__main__':
-    copy_current_file()
+    copy_file()
     delete_copyes()
 
 # Для задания normal
