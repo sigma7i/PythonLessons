@@ -16,7 +16,7 @@ class BaseCar:
         self.is_police = is_police
 
     def go(self):
-        print(f'{self.name} машина поехала со скоростью {self.speed}')
+        print(f'{self.name} поехала со скоростью {self.speed}')
 
     def stop(self):
         print(f'{self.name} остановилась')
