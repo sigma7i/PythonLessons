@@ -10,64 +10,63 @@
 # Функция подсчета урона должна быть инкапсулирована
 # Вам надо описать игровой цикл так же через класс.
 # Создайте экземпляры классов, проведите бой. Кто будет атаковать первым оставляю на ваше усмотрение.
+import pickle
+
 
 class Person:
-    def __init__(self, name, health, damage, armor):
+    def __init__(self, name, health, damage, armor=1):
         self.name = name
         self.health = health
         self.damage = damage
         self.armor = armor
 
-    # def save_to_file(self):
-    #     with open(self.name + '.txt', 'w', encoding='UTF-8') as fw:
-    #         for key, value in vars(self).items():
-    #             fw.write(f'{key} {value}\n')
-    #
-    # def read_from_file(self):
-    #     with open(self.name + '.txt', 'r', encoding='UTF-8') as fr:
-    #         file_lines = fr.readlines()
-    #         for line in file_lines:
-    #             key, value = line.replace('\n', '').split(' ')
-    #             if key == 'name':
-    #                 name =
+    def save_to_file(self):
+        with open(self.name + '.txt', 'wb') as wb:
+            pickle.dump(self, wb)
+
+    def read_from_file(self):
+        with open(self.name + '.txt', 'rb') as rb:
+            return pickle.load(rb)
 
     def _get_damage(self, attack_person):
         return self.damage / attack_person.armor
 
     def attack(self, attack_person):
-        damage = self._get_damage(attack_person)
+        damage = round(self._get_damage(attack_person), 2)
         attack_person.health -= damage
         print(f'{self.name} атакует {attack_person.name}')
         print(f'Получен урон: {damage}')
 
 
+class Fight:
+    def __init__(self, player, enemy):
+        self.player = player
+        self.enemy = enemy
+
+    def fight(self):
+        i = 1
+        while True:
+            if i % 2 == 0:
+                self.player.attack(self.enemy)
+            else:
+                self.enemy.attack(self.player)
+
+            if self.player.health <= 0:
+                print(self.player.name + ' проиграл')
+                break
+            if self.enemy.health <= 0:
+                print(self.enemy.name + ' проиграл')
+                break
+            i += 1
 
 
+player = Person('elf', 100, 80, 1.3)
+enemy = Person('ork', 150, 40, 1.4)
 
+player.save_to_file()
 
-# def fight(player, enemy):
-#     i = 1
-#     while True:
-#         if i % 2 == 0:
-#             attack(player, enemy)
-#         else:
-#             attack(enemy, player)
-#
-#         if player['health'] <= 0:
-#             print(player['name'] + ' проиграл')
-#             break
-#         if enemy['health'] <= 0:
-#             print(enemy['name'] + ' проиграл')
-#             break
-#         i+=1
-#
-# # использование
-# player = create_unit('elf', armor=1.3)
-# enemy = create_unit('ork', 150, 40)
-#
-# save_many_payers(player, enemy)
-#
-# saved_player = read_from_file(player)
-# saved_enemy = read_from_file(enemy)
-#
-# fight(saved_player, saved_enemy)
+saved_player = player.read_from_file()
+
+fight_arena = Fight(saved_player, enemy)
+
+fight_arena.fight()
