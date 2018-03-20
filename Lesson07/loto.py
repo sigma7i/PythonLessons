@@ -23,11 +23,12 @@ class LotoCard:
 
     def _generate_row(self, uq_numbers):
         unique_row = [uq_numbers.pop() for _ in range(0, self.numbers)]
+        unique_row.sort()
+
         spaces_count = self.colums - self.numbers
-        spaces = [' ' for _ in range(0, spaces_count)]
-        unique_row += spaces
-        random.shuffle(unique_row)
-        # сотритровка
+        for _ in range(0, spaces_count):
+            unique_row.insert(random.randint(0, self.numbers), ' ')
+
         return unique_row
 
     def print_card(self):
